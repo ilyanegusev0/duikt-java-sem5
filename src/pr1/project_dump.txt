@@ -1,0 +1,484 @@
+[ src/main/java/enums/Genre.java ]
+***
+package enums;
+
+public enum Genre {
+    Action,
+    Adventure,
+    Racing,
+    RPG,
+    Sports,
+    Strategy
+}
+
+[ src/main/java/Main.java ]
+***
+import enums.Genre;
+import models.Developer;
+import models.Game;
+import models.GameStore;
+import models.User;
+
+import java.time.LocalDate;
+import java.util.List;
+
+public class Main {
+    public static void main() {
+        GameStore store = new GameStore();
+
+
+        // DEVELOPERS
+
+        Developer rockstarNorth = new Developer("Rockstar North");
+        Developer fromSoftware = new Developer("FromSoftware, Inc.");
+        Developer qloc = new Developer("QLOC");
+        Developer cdProjectRed = new Developer("CD PROJEKT RED");
+        Developer ghostGames = new Developer("Ghost Games");
+        Developer ubisoftMontreal = new Developer("Ubisoft Montreal");
+        Developer ubisoftMontrealMassiveEntertainmentAndUbisoftShanghai = new Developer("Ubisoft Montreal, Massive Entertainment, and Ubisoft Shanghai");
+
+
+        // GAMES
+
+        Game darkSouls3 = new Game("DARK SOULS™ III",
+                "Dark Souls continues to push the boundaries with the latest, ambitious chapter in the critically-acclaimed and genre-defining series. Prepare yourself and Embrace The Darkness!",
+                LocalDate.of(2016, 4, 11),
+                List.of(Genre.Action),
+                List.of(qloc, fromSoftware),
+                990);
+        store.addGame(darkSouls3);
+
+        Game gtaVLegacy = new Game("Grand Theft Auto V Legacy",
+                "Grand Theft Auto V for PC offers players the option to explore the award-winning world of Los Santos and Blaine County in resolutions of up to 4k and beyond, as well as the chance to experience the game running at 60 frames per second.",
+                LocalDate.of(2015, 4, 14),
+                List.of(Genre.Action, Genre.Adventure),
+                List.of(rockstarNorth),
+                867);
+        gtaVLegacy.setAvailable(false);
+        store.addGame(gtaVLegacy);
+
+        Game theWitcher3 = new Game("The Witcher 3: Wild Hunt - Complete Edition",
+                "You are Geralt of Rivia, mercenary monster slayer. Before you stands a war-torn, monster-infested continent you can explore at will. Your current contract? Tracking down Ciri — the Child of Prophecy, a living weapon that can alter the shape of the world.",
+                LocalDate.of(2015, 5, 18),
+                List.of(Genre.RPG),
+                List.of(cdProjectRed),
+                1349);
+        store.addGame(theWitcher3);
+
+        Game needForSpeedPayback = new Game("Need for Speed™ Payback",
+                "Set in the underworld of Fortune Valley, you and your crew were divided by betrayal and reunited by revenge to take down The House, a nefarious cartel that rules the city’s casinos, criminals and cops. In this corrupt gambler’s paradise, the stakes are high and The House always wins.",
+                LocalDate.of(2017, 11, 6),
+                List.of(Genre.Action, Genre.Adventure, Genre.Racing, Genre.Sports, Genre.Strategy),
+                List.of(ghostGames),
+                799);
+        store.addGame(needForSpeedPayback);
+
+        Game assassinsCreedRevelations = new Game("Assassin's Creed® Revelations",
+                "Ezio Auditore walks in the footsteps of the legendary mentor Altair, on a dangerous journey of discovery and revelation.",
+                LocalDate.of(2011, 12, 1),
+                List.of(Genre.Action, Genre.Adventure),
+                List.of(ubisoftMontreal),
+                225);
+        store.addGame(assassinsCreedRevelations);
+
+        Game farCry3 = new Game("Far Cry 3",
+                "Stranded on the Rook Islands as Jason Brody, fight your way through a lawless tropical open world using a powerful arsenal to save your friends and escape the madness of this acclaimed visceral FPS.",
+                LocalDate.of(2012, 11, 29),
+                List.of(Genre.Action, Genre.Adventure),
+                List.of(ubisoftMontrealMassiveEntertainmentAndUbisoftShanghai),
+                299);
+        store.addGame(farCry3);
+
+
+        // USERS
+
+        User relax = new User("Релакс",
+                "Man, this party stinks. I f*cking hate these people.",
+                24);
+        store.addUser(relax);
+
+        User miraDiv = new User("MiraDiv",
+                "Made in Ukraine",
+                25);
+        store.addUser(miraDiv);
+
+
+        // CHECKOUTS
+
+        relax.addFunds(5000);
+        miraDiv.addFunds(10000);
+
+        relax.addToCart(theWitcher3);
+        relax.addToCart(darkSouls3);
+        store.checkout(relax);
+
+        miraDiv.addToCart(gtaVLegacy);
+        miraDiv.addToCart(needForSpeedPayback);
+        miraDiv.addToCart(farCry3);
+        store.checkout(miraDiv);
+
+        relax.addToCart(assassinsCreedRevelations);
+        store.checkout(relax);
+
+
+        // DEMONSTRATIONS
+
+        store.showGames();
+        store.showUsers();
+        store.showOrders();
+    }
+}
+
+[ src/main/java/models/Developer.java ]
+***
+package models;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Getter
+@Setter
+@AllArgsConstructor
+public class Developer {
+    private final List<Game> games = new ArrayList<>();
+
+    private String name;
+
+    @Override
+    public String toString() {
+        return String.format("\u001B[34m%s\u001B[0m", name);
+    }
+
+    protected void linkGame(Game game) {
+        if (!games.contains(game))
+            games.add(game);
+    }
+}
+
+[ src/main/java/models/Game.java ]
+***
+package models;
+
+import enums.Genre;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import org.apache.commons.text.WordUtils;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
+@Getter
+@Setter
+@EqualsAndHashCode
+public class Game {
+    private static int idCounter = 1;
+
+    private final int id = idCounter++;
+
+    private String title;
+    private String description;
+    private LocalDate releaseDate;
+    private List<Genre> genres;
+    private List<Developer> developers;
+    private int price;
+    private boolean isAvailable = true;
+
+    public Game(String title, String description, LocalDate releaseDate, List<Genre> genres, List<Developer> developers, int price) {
+        this.title = title;
+        this.description = description;
+        this.releaseDate = releaseDate;
+        this.genres = genres;
+        this.developers = developers;
+        this.price = price;
+
+        if (developers != null) {
+            for (Developer dev : developers)
+                dev.linkGame(this);
+        }
+    }
+
+    @Override
+    public String toString() {
+        String genresString = String.join(", ", genres.stream().map(Enum::name).toList());
+
+        String developersString = String.join(", ", developers.stream().map(Developer::toString).toList());
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMM, yyyy");
+        String formattedDate = releaseDate.format(formatter);
+
+        String addToCart = isAvailable
+                ? String.format("\u001B[1m\u001B[32m[ %d₴ | Add to Cart ]\u001B[0m", price)
+                : String.format("\u001B[31m%s is no longer available on the store.\u001B[0m", title);
+
+        return String.format("""
+                        \u001B[1m%s [%d]\u001B[0m
+                        
+                        %s
+                        
+                        \u001B[1mGENRE:\u001B[0m %s
+                        \u001B[1mDEVELOPER:\u001B[0m %s
+                        \u001B[1mRELEASE DATE:\u001B[0m %s
+                        
+                        %s""",
+                title, id, WordUtils.wrap(description, 100), genresString, developersString, formattedDate, addToCart);
+    }
+}
+
+[ src/main/java/models/GameStore.java ]
+***
+package models;
+
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Getter
+@Setter
+public class GameStore {
+    private List<Game> games = new ArrayList<>();
+    private List<User> users = new ArrayList<>();
+    private List<Order> orders = new ArrayList<>();
+
+
+    public boolean addGame(Game game) {
+        if (games.contains(game))
+            return false;
+
+        return games.add(game);
+    }
+
+    public boolean removeGame(Game game) {
+        if (!games.contains(game))
+            return false;
+
+        return games.remove(game);
+    }
+
+    public boolean addUser(User user) {
+        if (users.contains(user))
+            return false;
+
+        return users.add(user);
+    }
+
+    public boolean removeUser(User user) {
+        if (!users.contains(user))
+            return false;
+
+        return users.remove(user);
+    }
+
+    public boolean addOrder(Order order) {
+        if (orders.contains(order))
+            return false;
+        return orders.add(order);
+    }
+
+    public boolean removeOrder(Order order) {
+        if (!orders.contains(order))
+            return false;
+        return orders.remove(order);
+    }
+
+    public Order checkout(User user) {
+        if (user == null || !users.contains(user))
+            return null;
+
+        List<Game> cart = user.getCart();
+        if (cart.isEmpty())
+            return null;
+
+        int cartTotal = user.getCartTotal();
+        if (user.getBalance() < cartTotal)
+            return null;
+
+        List<Game> purchased = List.copyOf(cart);
+
+        user.withdrawFunds(cartTotal);
+        purchased.forEach(user::addGameToLibrary);
+        user.clearCart();
+
+        Order order = new Order(user, purchased, cartTotal);
+        addOrder(order);
+        return order;
+    }
+
+    public void showGames() {
+        System.out.println(String.format("\u001B[1m\nGAMES (%d items)\u001B[0m", games.size()));
+        System.out.println("-".repeat(200));
+
+        for (Game game : games) {
+            System.out.println(game);
+            System.out.println("-".repeat(200));
+        }
+    }
+
+    public void showUsers() {
+        System.out.println(String.format("\u001B[1m\nUSERS (%d items)\u001B[0m", users.size()));
+        System.out.println("-".repeat(200));
+
+        for (User user : users) {
+            System.out.println(user);
+            System.out.println("-".repeat(200));
+        }
+    }
+
+    public void showOrders() {
+        System.out.println(String.format("\u001B[1m\nORDERS (%d items)\u001B[0m", orders.size()));
+        System.out.println("-".repeat(200));
+
+        for (Order order : orders) {
+            System.out.println(order);
+            System.out.println("-".repeat(200));
+        }
+    }
+}
+
+[ src/main/java/models/Order.java ]
+***
+package models;
+
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
+@Setter
+@Getter
+@RequiredArgsConstructor
+public class Order {
+    private static int idCounter = 1;
+
+    private int id = idCounter++;
+    private LocalDateTime createAt = LocalDateTime.now();
+
+    private final User user;
+    private final List<Game> games;
+    private final int totalPrice;
+
+    @Override
+    public String toString() {
+        String gameTitles = " - " + String.join("\n - ", games.stream().map(Game::getTitle).toList());
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMM, yyyy HH:mm:ss ");
+        String formattedDate = createAt.format(formatter);
+
+        return String.format("""
+                        \u001B[1mORDER #%d\u001B[0m
+                        
+                        \u001B[1mUSER:\u001B[0m \u001B[34m%s\u001B[0m
+                        \u001B[1mTOTAL:\u001B[0m %d₴
+                        \u001B[1mDATE:\u001B[0m %s
+                        
+                        \u001B[1mGAMES (%d items):\u001B[0m
+                        %s""",
+                id, user.getName(), totalPrice, formattedDate, games.size(), gameTitles);
+    }
+}
+
+[ src/main/java/models/User.java ]
+***
+package models;
+
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Getter
+@Setter
+@RequiredArgsConstructor
+public class User {
+    private static int idCounter = 1;
+
+    private int id = idCounter++;
+    private int balance = 0;
+    private List<Game> library = new ArrayList<>();
+    private List<Game> cart = new ArrayList<>();
+
+    private final String name;
+    private final String description;
+    private final int level;
+
+    @Override
+    public String toString() {
+        String gameTitles = " - " + String.join("\n - ", library.stream().map(Game::getTitle).toList());
+
+        return String.format("""
+                        \u001B[1m%s [%d]\u001B[0m
+                        
+                        %s
+                        
+                        \u001B[1mBALANCE:\u001B[0m %d₴
+                        \u001B[1mLEVEL:\u001B[0m %d
+                        
+                        \u001B[1mLIBRARY (%d items):\u001B[0m
+                        %s""",
+                name, id, description, balance, level, library.size(), gameTitles);
+    }
+
+    public boolean addFunds(int amount) {
+        if (amount <= 0)
+            return false;
+        balance += amount;
+        return true;
+    }
+
+    public boolean withdrawFunds(int amount) {
+        if (amount <= 0 || balance < amount)
+            return false;
+        balance -= amount;
+        return true;
+    }
+
+    public boolean addToCart(Game game) {
+        if (game == null || !game.isAvailable())
+            return false;
+        if (cart.contains(game) || library.contains(game))
+            return false;
+        return cart.add(game);
+    }
+
+    public boolean removeFromCart(Game game) {
+        return cart.remove(game);
+    }
+
+    public boolean clearCart() {
+        if (cart.isEmpty())
+            return false;
+        cart.clear();
+        return true;
+    }
+
+    public int getCartTotal() {
+        return cart.stream()
+                .mapToInt(Game::getPrice)
+                .sum();
+    }
+
+    public boolean addGameToLibrary(Game game) {
+        if (game == null || library.contains(game))
+            return false;
+        return library.add(game);
+    }
+
+    public boolean removeGameFromLibrary(Game game) {
+        return library.add(game);
+    }
+}
+
