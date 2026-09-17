@@ -1,4 +1,4 @@
-# Практична робота №?
+# Практична робота №1
 
 ## Інформація про автора
 
@@ -8,4 +8,15 @@
 **Семестр:** 5
 
 ## Результати виконання роботи
-![](screenshots/pr?-screenshot?.png)
+
+### Games Demonstration:
+
+![Games Demonstration](screenshots/pr1-screenshot1.png)
+
+### Users Demonstration:
+
+![Users Demonstration](screenshots/pr1-screenshot2.png)
+
+### Orders Demonstration:
+
+![Orders Demonstration](screenshots/pr1-screenshot3.png)
