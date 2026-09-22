@@ -72,7 +72,7 @@ public class GameStore {
         purchased.forEach(user::addGameToLibrary);
         user.clearCart();
 
-        Order order = new Order(user, purchased, cartTotal);
+        Order order = new Order(user, purchased);
         addOrder(order);
         return order;
     }

@@ -10,16 +10,23 @@ import java.util.List;
 
 @Setter
 @Getter
-@RequiredArgsConstructor
 public class Order {
     private static int idCounter = 1;
 
     private int id = idCounter++;
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    private final User user;
-    private final List<Game> games;
-    private final int totalPrice;
+    private User user;
+    private List<Game> games;
+    private int totalPrice;
+
+    public Order(User user, List<Game> games) {
+        this.user = user;
+        this.games = games;
+        totalPrice = games.stream()
+                .mapToInt(Game::getPrice)
+                .sum();
+    }
 
     @Override
     public String toString() {
