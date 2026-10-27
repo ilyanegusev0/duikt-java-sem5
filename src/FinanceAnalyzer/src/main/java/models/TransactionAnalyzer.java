@@ -55,4 +55,8 @@ public abstract class TransactionAnalyzer {
                 })
                 .toList();
     }
+
+    public static List<Transaction> findLargestExpensesInPeriod(List<Transaction> transactions, LocalDate start, LocalDate end, int count) {
+        return findTopExpenses(findTransactionsInPeriod(transactions, start, end), count);
+    }
 }

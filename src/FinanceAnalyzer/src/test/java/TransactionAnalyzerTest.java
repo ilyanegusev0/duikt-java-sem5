@@ -3,7 +3,9 @@ import models.TransactionAnalyzer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import utils.DateTimeFormatters;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,5 +58,32 @@ public class TransactionAnalyzerTest {
 
         boolean containsPositive = top10.stream().anyMatch(t -> t.getAmount() > 0);
         Assertions.assertFalse(containsPositive, "Top expenses list must not contain any positive income transactions");
+    }
+
+    @Test
+    public void testFindTransactionsInPeriod() {
+        LocalDate start = LocalDate.of(2026, 1, 1);
+        LocalDate end = LocalDate.of(2026, 2, 28);
+
+        List<Transaction> transactionsInPeriod = TransactionAnalyzer.findTransactionsInPeriod(transactions, start, end);
+
+        Assertions.assertEquals(10, transactionsInPeriod.size());
+        Assertions.assertTrue(transactionsInPeriod.stream()
+                .allMatch(t -> !LocalDate.parse(t.getDate(), DateTimeFormatters.DATE)
+                        .isBefore(start)
+                        && !LocalDate.parse(t.getDate(), DateTimeFormatters.DATE)
+                        .isAfter(end)));
+    }
+
+    @Test
+    public void testFindLargestExpensesInPeriod() {
+        LocalDate start = LocalDate.of(2026, 1, 1);
+        LocalDate end = LocalDate.of(2026, 3, 31);
+
+        List<Transaction> result = TransactionAnalyzer.findLargestExpensesInPeriod(transactions, start, end, 5);
+
+        Assertions.assertEquals(5, result.size());
+        Assertions.assertEquals(-3000.0, result.getFirst().getAmount());
+        Assertions.assertTrue(result.stream().allMatch(t -> t.getAmount() < 0));
     }
 }

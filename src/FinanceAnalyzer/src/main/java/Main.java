@@ -29,5 +29,7 @@ public class Main {
         List<Transaction> transactionsInPeriod = TransactionAnalyzer.findTransactionsInPeriod(transactions, start, end);
         TransactionReportGenerator.printTransactionsInPeriod(transactionsInPeriod, start, end);
 
+        List<Transaction> largestExpensesInPeriod = TransactionAnalyzer.findLargestExpensesInPeriod(transactions, start, end, 100);
+        TransactionReportGenerator.printLargestExpensesInPeriod(largestExpensesInPeriod, start, end);
     }
 }

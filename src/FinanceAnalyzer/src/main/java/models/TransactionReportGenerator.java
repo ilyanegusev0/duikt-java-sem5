@@ -41,4 +41,14 @@ public abstract class TransactionReportGenerator {
             System.out.println(transaction);
         }
     }
+
+    public static void printLargestExpensesInPeriod(List<Transaction> largestExpensesInPeriod, LocalDate start, LocalDate end) {
+        String formattedStart = start.format(DateTimeFormatters.DATE_DISPLAY);
+        String formattedEnd = end.format(DateTimeFormatters.DATE_DISPLAY);
+
+        System.out.println("\n" + Text.of("Top " + largestExpensesInPeriod.size() + " largest expenses from " + formattedStart + " to " + formattedEnd + ":").b());
+        for (Transaction expense : largestExpensesInPeriod) {
+            System.out.println(expense);
+        }
+    }
 }
