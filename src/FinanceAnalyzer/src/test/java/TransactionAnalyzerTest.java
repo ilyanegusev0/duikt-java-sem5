@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import utils.DateTimeFormatters;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -132,5 +133,17 @@ public class TransactionAnalyzerTest {
         Assertions.assertEquals(1250.0, grouped.get("Транспорт"));
 
         Assertions.assertFalse(grouped.containsKey("Зарплата"));
+    }
+
+    @Test
+    public void testGroupExpensesByMonth() {
+        Map<YearMonth, Double> grouped = TransactionAnalyzer.groupExpensesByMonth(transactions);
+
+        Assertions.assertEquals(3, grouped.size(), "Expected exactly 3 months");
+
+        Assertions.assertEquals(5250.0, grouped.get(YearMonth.of(2026, 1)));
+        Assertions.assertEquals(2500.0, grouped.get(YearMonth.of(2026, 2)));
+        Assertions.assertEquals(3150.0, grouped.get(YearMonth.of(2026, 3)));
+
     }
 }

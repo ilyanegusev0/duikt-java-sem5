@@ -7,6 +7,7 @@ import utils.DateTimeFormatters;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -79,6 +80,18 @@ public abstract class TransactionAnalyzer {
     public static Map<String, Double> groupExpensesByCategory(List<Transaction> transactions) {
         return transactions.stream()
                 .filter(t -> t.getAmount() < 0)
-                .collect(Collectors.groupingBy(Transaction::getDescription, TreeMap::new, Collectors.summingDouble(t -> Math.abs(t.getAmount()))));
+                .collect(Collectors.groupingBy(
+                        Transaction::getDescription,
+                        TreeMap::new,
+                        Collectors.summingDouble(t -> Math.abs(t.getAmount()))));
+    }
+
+    public static Map<YearMonth, Double> groupExpensesByMonth(List<Transaction> transactions) {
+        return transactions.stream()
+                .filter(t -> t.getAmount() < 0)
+                .collect(Collectors.groupingBy(
+                        t -> YearMonth.from(LocalDate.parse(t.getDate(), DateTimeFormatters.DATE)),
+                        TreeMap::new,
+                        Collectors.summingDouble(t -> Math.abs(t.getAmount()))));
     }
 }

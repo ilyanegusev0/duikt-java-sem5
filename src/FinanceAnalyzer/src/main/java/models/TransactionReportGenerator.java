@@ -78,7 +78,21 @@ public abstract class TransactionReportGenerator {
                 .stream()
                 .sorted(Comparator.comparing(Map.Entry<String, Double>::getValue).reversed())
                 .forEach(e -> System.out.printf("%-25s %10.2f | %s%n",
-                        e.getKey(), e.getValue(), buildBar(e.getValue()))
+                        e.getKey(),
+                        e.getValue(),
+                        buildBar(e.getValue()))
+                );
+    }
+
+    public static void printExpensesByMonthReport(Map<YearMonth, Double> months) {
+        System.out.println("\n" + Text.of("Expenses grouped by months:").b());
+        months.entrySet()
+                .stream()
+                .sorted(Comparator.comparing(Map.Entry<YearMonth, Double>::getValue).reversed())
+                .forEach(e -> System.out.printf("%-10s %10.2f | %s%n",
+                        e.getKey().format(DateTimeFormatters.MONTH_YEAR_DISPLAY),
+                        e.getValue(),
+                        buildBar(e.getValue()))
                 );
     }
 

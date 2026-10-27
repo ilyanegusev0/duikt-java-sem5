@@ -4,6 +4,7 @@ import models.TransactionCSVReader;
 import models.TransactionReportGenerator;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.Map;
 
@@ -48,5 +49,9 @@ public class Main {
         //printExpensesByCategoryReport
         Map<String, Double> categories = TransactionAnalyzer.groupExpensesByCategory(transactions);
         TransactionReportGenerator.printExpensesByCategoryReport(categories);
+
+        // printExpensesByMonthReport
+        Map<YearMonth, Double> months = TransactionAnalyzer.groupExpensesByMonth(transactions);
+        TransactionReportGenerator.printExpensesByMonthReport(months);
     }
 }
