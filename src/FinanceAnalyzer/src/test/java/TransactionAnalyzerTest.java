@@ -48,16 +48,29 @@ public class TransactionAnalyzerTest {
     }
 
     @Test
-    public void testFindTopExpenses() {
-        List<Transaction> top10 = TransactionAnalyzer.findTopExpenses(transactions, 10);
+    public void testFindLargestExpenses() {
+        List<Transaction> largestExpenses = TransactionAnalyzer.findLargestExpenses(transactions, 10);
 
-        Assertions.assertEquals(10, top10.size(), "Should return exactly 10 expenses");
+        Assertions.assertEquals(10, largestExpenses.size(), "Should return exactly 10 expenses");
 
-        Assertions.assertEquals(-3000.0, top10.getFirst().getAmount(), "The first element must be the largest expense");
-        Assertions.assertEquals(-50.0, top10.getLast().getAmount(), "The last element must be the lowest expense");
+        Assertions.assertEquals(-3000.0, largestExpenses.getFirst().getAmount(), "The first element must be the largest expense");
+        Assertions.assertEquals(-50.0, largestExpenses.getLast().getAmount(), "The last element must be the smallest expense");
 
-        boolean containsPositive = top10.stream().anyMatch(t -> t.getAmount() > 0);
-        Assertions.assertFalse(containsPositive, "Top expenses list must not contain any positive income transactions");
+        boolean containsPositive = largestExpenses.stream().anyMatch(t -> t.getAmount() > 0);
+        Assertions.assertFalse(containsPositive, "Largest expenses list must not contain any positive income transactions");
+    }
+
+    @Test
+    public void testFindSmallestExpenses() {
+        List<Transaction> smallestExpenses = TransactionAnalyzer.findSmallestExpenses(transactions, 10);
+
+        Assertions.assertEquals(10, smallestExpenses.size(), "Should return exactly 10 expenses");
+
+        Assertions.assertEquals(-50.0, smallestExpenses.getFirst().getAmount(), "The first element must be the smallest expense");
+        Assertions.assertEquals(-3000.0, smallestExpenses.getLast().getAmount(), "The last element must be the largest expense");
+
+        boolean containsPositive = smallestExpenses.stream().anyMatch(t -> t.getAmount() > 0);
+        Assertions.assertFalse(containsPositive, "Smallest expenses list must not contain any positive income transactions");
     }
 
     @Test

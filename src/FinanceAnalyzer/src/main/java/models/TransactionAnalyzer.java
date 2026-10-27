@@ -39,10 +39,18 @@ public abstract class TransactionAnalyzer {
         return count;
     }
 
-    public static List<Transaction> findTopExpenses(List<Transaction> transactions, int count) {
+    public static List<Transaction> findLargestExpenses(List<Transaction> transactions, int count) {
         return transactions.stream()
                 .filter(t -> t.getAmount() < 0)
                 .sorted(Comparator.comparing(Transaction::getAmount))
+                .limit(count)
+                .toList();
+    }
+
+    public static List<Transaction> findSmallestExpenses(List<Transaction> transactions, int count) {
+        return transactions.stream()
+                .filter(t -> t.getAmount() < 0)
+                .sorted(Comparator.comparing(Transaction::getAmount).reversed())
                 .limit(count)
                 .toList();
     }
@@ -57,6 +65,6 @@ public abstract class TransactionAnalyzer {
     }
 
     public static List<Transaction> findLargestExpensesInPeriod(List<Transaction> transactions, LocalDate start, LocalDate end, int count) {
-        return findTopExpenses(findTransactionsInPeriod(transactions, start, end), count);
+        return findLargestExpenses(findTransactionsInPeriod(transactions, start, end), count);
     }
 }

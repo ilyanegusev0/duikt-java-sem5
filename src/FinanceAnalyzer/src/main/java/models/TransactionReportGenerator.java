@@ -26,9 +26,16 @@ public abstract class TransactionReportGenerator {
         System.out.println("\n" + Text.of("Total transaction for " + Text.of(formattedDate).i() + ": ").b() + count);
     }
 
-    public static void printTopExpensesReport(List<Transaction> topExpenses) {
-        System.out.println("\n" + Text.of("Top " + topExpenses.size() + " highest expenses:").b());
-        for (Transaction expense : topExpenses) {
+    public static void printLargestExpensesReport(List<Transaction> largestExpenses) {
+        System.out.println("\n" + Text.of("Top " + largestExpenses.size() + " largest expenses:").b());
+        for (Transaction expense : largestExpenses) {
+            System.out.println(expense.getDescription() + ": " + expense.getAmount());
+        }
+    }
+
+    public static void printSmallestExpensesReport(List<Transaction> smallestExpenses) {
+        System.out.println("\n" + Text.of("Top " + smallestExpenses.size() + " smallest expenses:").b());
+        for (Transaction expense : smallestExpenses) {
             System.out.println(expense.getDescription() + ": " + expense.getAmount());
         }
     }
