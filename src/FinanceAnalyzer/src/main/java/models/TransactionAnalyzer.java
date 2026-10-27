@@ -67,4 +67,8 @@ public abstract class TransactionAnalyzer {
     public static List<Transaction> findLargestExpensesInPeriod(List<Transaction> transactions, LocalDate start, LocalDate end, int count) {
         return findLargestExpenses(findTransactionsInPeriod(transactions, start, end), count);
     }
+
+    public static List<Transaction> findSmallestExpensesInPeriod(List<Transaction> transactions, LocalDate start, LocalDate end, int count) {
+        return findSmallestExpenses(findTransactionsInPeriod(transactions, start, end), count);
+    }
 }

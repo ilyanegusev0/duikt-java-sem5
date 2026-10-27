@@ -93,10 +93,24 @@ public class TransactionAnalyzerTest {
         LocalDate start = LocalDate.of(2026, 1, 1);
         LocalDate end = LocalDate.of(2026, 3, 31);
 
-        List<Transaction> result = TransactionAnalyzer.findLargestExpensesInPeriod(transactions, start, end, 5);
+        List<Transaction> largestExpensesInPeriod = TransactionAnalyzer.findLargestExpensesInPeriod(transactions, start, end, 5);
 
-        Assertions.assertEquals(5, result.size());
-        Assertions.assertEquals(-3000.0, result.getFirst().getAmount());
-        Assertions.assertTrue(result.stream().allMatch(t -> t.getAmount() < 0));
+        Assertions.assertEquals(5, largestExpensesInPeriod.size());
+        Assertions.assertEquals(-3000.0, largestExpensesInPeriod.getFirst().getAmount());
+        Assertions.assertEquals(-800.0, largestExpensesInPeriod.get(4).getAmount());
+        Assertions.assertTrue(largestExpensesInPeriod.stream().allMatch(t -> t.getAmount() < 0));
+    }
+
+    @Test
+    public void testFindSmallestExpensesInPeriod() {
+        LocalDate start = LocalDate.of(2026, 1, 1);
+        LocalDate end = LocalDate.of(2026, 3, 31);
+
+        List<Transaction> smallestExpensesInPeriod = TransactionAnalyzer.findSmallestExpensesInPeriod(transactions, start, end, 5);
+
+        Assertions.assertEquals(5, smallestExpensesInPeriod.size());
+        Assertions.assertEquals(-50.0, smallestExpensesInPeriod.getFirst().getAmount());
+        Assertions.assertEquals(-450.0, smallestExpensesInPeriod.get(4).getAmount());
+        Assertions.assertTrue(smallestExpensesInPeriod.stream().allMatch(t -> t.getAmount() < 0));
     }
 }

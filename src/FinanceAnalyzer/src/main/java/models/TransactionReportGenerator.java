@@ -58,4 +58,14 @@ public abstract class TransactionReportGenerator {
             System.out.println(expense);
         }
     }
+
+    public static void printSmallestExpensesInPeriod(List<Transaction> smallestExpensesInPeriod, LocalDate start, LocalDate end) {
+        String formattedStart = start.format(DateTimeFormatters.DATE_DISPLAY);
+        String formattedEnd = end.format(DateTimeFormatters.DATE_DISPLAY);
+
+        System.out.println("\n" + Text.of("Top " + smallestExpensesInPeriod.size() + " smallest expenses from " + formattedStart + " to " + formattedEnd + ":").b());
+        for (Transaction expense : smallestExpensesInPeriod) {
+            System.out.println(expense);
+        }
+    }
 }

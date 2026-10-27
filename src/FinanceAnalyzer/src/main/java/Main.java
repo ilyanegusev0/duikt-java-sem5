@@ -39,5 +39,9 @@ public class Main {
         // printLargestExpensesInPeriod
         List<Transaction> largestExpensesInPeriod = TransactionAnalyzer.findLargestExpensesInPeriod(transactions, start, end, 100);
         TransactionReportGenerator.printLargestExpensesInPeriod(largestExpensesInPeriod, start, end);
+
+        // printSmallestExpensesInPeriod
+        List<Transaction> smallestExpensesInPeriod = TransactionAnalyzer.findSmallestExpensesInPeriod(transactions, start, end, 100);
+        TransactionReportGenerator.printSmallestExpensesInPeriod(smallestExpensesInPeriod, start, end);
     }
 }
