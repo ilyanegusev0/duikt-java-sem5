@@ -23,8 +23,8 @@ public abstract class TransactionReportGenerator {
         System.out.println("\n" + Text.of("Balance: ").b() + balance);
     }
 
-    public static void printTransactionsCountByMonthReport(String mountYear, int count) {
-        YearMonth yearMonth = YearMonth.parse(mountYear, DateTimeFormatters.MONTH_YEAR);
+    public static void printTransactionsCountByMonthReport(String monthYear, int count) {
+        YearMonth yearMonth = YearMonth.parse(monthYear, DateTimeFormatters.MONTH_YEAR);
         String formattedDate = yearMonth.format(DateTimeFormatters.MONTH_YEAR_DISPLAY);
         System.out.println("\n" + Text.of("Total transaction for " + Text.of(formattedDate).i() + ": ").b() + count);
     }
