@@ -5,9 +5,13 @@ import lombok.Getter;
 import lombok.Setter;
 import utils.DateTimeFormatters;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -70,5 +74,11 @@ public abstract class TransactionAnalyzer {
 
     public static List<Transaction> findSmallestExpensesInPeriod(List<Transaction> transactions, LocalDate start, LocalDate end, int count) {
         return findSmallestExpenses(findTransactionsInPeriod(transactions, start, end), count);
+    }
+
+    public static Map<String, Double> groupExpensesByCategory(List<Transaction> transactions) {
+        return transactions.stream()
+                .filter(t -> t.getAmount() < 0)
+                .collect(Collectors.groupingBy(Transaction::getDescription, TreeMap::new, Collectors.summingDouble(t -> Math.abs(t.getAmount()))));
     }
 }

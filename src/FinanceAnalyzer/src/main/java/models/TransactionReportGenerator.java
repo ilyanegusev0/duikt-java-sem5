@@ -5,9 +5,12 @@ import utils.DateTimeFormatters;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 public abstract class TransactionReportGenerator {
+    private static final double UNIT_VALUE = 1000;
 
     public static void printAllTransactions(List<Transaction> transactions) {
         System.out.println("\n" + Text.of("Transactions (" + transactions.size() + "):").b());
@@ -67,5 +70,24 @@ public abstract class TransactionReportGenerator {
         for (Transaction expense : smallestExpensesInPeriod) {
             System.out.println(expense);
         }
+    }
+
+    public static void printExpensesByCategoryReport(Map<String, Double> categories) {
+        System.out.println("\n" + Text.of("Expenses grouped by category:").b());
+        categories.entrySet()
+                .stream()
+                .sorted(Comparator.comparing(Map.Entry<String, Double>::getValue).reversed())
+                .forEach(e -> System.out.printf("%-25s %10.2f | %s%n",
+                        e.getKey(), e.getValue(), buildBar(e.getValue()))
+                );
+    }
+
+    private static String buildBar(double value) {
+        if (value <= 0) {
+            return "";
+        }
+
+        int asterisks = (int) Math.max(1, Math.round(value / UNIT_VALUE));
+        return "*".repeat(asterisks);
     }
 }

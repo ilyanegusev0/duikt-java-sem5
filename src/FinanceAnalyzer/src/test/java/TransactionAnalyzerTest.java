@@ -1,5 +1,6 @@
 import models.Transaction;
 import models.TransactionAnalyzer;
+import models.TransactionReportGenerator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -8,6 +9,7 @@ import utils.DateTimeFormatters;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class TransactionAnalyzerTest {
     private List<Transaction> transactions;
@@ -17,16 +19,16 @@ public class TransactionAnalyzerTest {
         transactions = new ArrayList<>();
         transactions.add(new Transaction("01-01-2026", -500.0, "Продукти"));
         transactions.add(new Transaction("02-01-2026", -1500.0, "Оренда"));
-        transactions.add(new Transaction("03-01-2026", -200.0, "Кава"));
+        transactions.add(new Transaction("03-01-2026", -200.0, "Продукти"));
         transactions.add(new Transaction("04-01-2026", 2000.0, "Зарплата"));
         transactions.add(new Transaction("05-01-2026", -3000.0, "Техніка"));
         transactions.add(new Transaction("06-01-2026", -50.0, "Транспорт"));
-        transactions.add(new Transaction("07-02-2026", -800.0, "Комуналка"));
-        transactions.add(new Transaction("08-02-2026", -50.0, "Перекус"));
-        transactions.add(new Transaction("09-02-2026", -1200.0, "Паливо"));
-        transactions.add(new Transaction("10-02-2026", -450.0, "Кіно"));
-        transactions.add(new Transaction("11-03-2026", -3000.0, "Страховка"));
-        transactions.add(new Transaction("12-03-2026", -150.0, "Книги"));
+        transactions.add(new Transaction("07-02-2026", -800.0, "Оренда"));
+        transactions.add(new Transaction("08-02-2026", -50.0, "Продукти"));
+        transactions.add(new Transaction("09-02-2026", -1200.0, "Транспорт"));
+        transactions.add(new Transaction("10-02-2026", -450.0, "Продукти"));
+        transactions.add(new Transaction("11-03-2026", -3000.0, "Техніка"));
+        transactions.add(new Transaction("12-03-2026", -150.0, "Продукти"));
     }
 
     @Test
@@ -81,6 +83,7 @@ public class TransactionAnalyzerTest {
         List<Transaction> transactionsInPeriod = TransactionAnalyzer.findTransactionsInPeriod(transactions, start, end);
 
         Assertions.assertEquals(10, transactionsInPeriod.size());
+
         Assertions.assertTrue(transactionsInPeriod.stream()
                 .allMatch(t -> !LocalDate.parse(t.getDate(), DateTimeFormatters.DATE)
                         .isBefore(start)
@@ -96,8 +99,10 @@ public class TransactionAnalyzerTest {
         List<Transaction> largestExpensesInPeriod = TransactionAnalyzer.findLargestExpensesInPeriod(transactions, start, end, 5);
 
         Assertions.assertEquals(5, largestExpensesInPeriod.size());
+
         Assertions.assertEquals(-3000.0, largestExpensesInPeriod.getFirst().getAmount());
         Assertions.assertEquals(-800.0, largestExpensesInPeriod.get(4).getAmount());
+
         Assertions.assertTrue(largestExpensesInPeriod.stream().allMatch(t -> t.getAmount() < 0));
     }
 
@@ -109,8 +114,23 @@ public class TransactionAnalyzerTest {
         List<Transaction> smallestExpensesInPeriod = TransactionAnalyzer.findSmallestExpensesInPeriod(transactions, start, end, 5);
 
         Assertions.assertEquals(5, smallestExpensesInPeriod.size());
+
         Assertions.assertEquals(-50.0, smallestExpensesInPeriod.getFirst().getAmount());
         Assertions.assertEquals(-450.0, smallestExpensesInPeriod.get(4).getAmount());
+
         Assertions.assertTrue(smallestExpensesInPeriod.stream().allMatch(t -> t.getAmount() < 0));
+    }
+
+    @Test
+    public void testGroupExpensesByCategory() {
+        Map<String, Double> grouped = TransactionAnalyzer.groupExpensesByCategory(transactions);
+
+        Assertions.assertEquals(4, grouped.size());
+        Assertions.assertEquals(1350.0, grouped.get("Продукти"));
+        Assertions.assertEquals(2300.0, grouped.get("Оренда"));
+        Assertions.assertEquals(6000.0, grouped.get("Техніка"));
+        Assertions.assertEquals(1250.0, grouped.get("Транспорт"));
+
+        Assertions.assertFalse(grouped.containsKey("Зарплата"));
     }
 }

@@ -5,6 +5,7 @@ import models.TransactionReportGenerator;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 public class Main {
     public static void main() {
@@ -43,5 +44,9 @@ public class Main {
         // printSmallestExpensesInPeriod
         List<Transaction> smallestExpensesInPeriod = TransactionAnalyzer.findSmallestExpensesInPeriod(transactions, start, end, 100);
         TransactionReportGenerator.printSmallestExpensesInPeriod(smallestExpensesInPeriod, start, end);
+
+        //printExpensesByCategoryReport
+        Map<String, Double> categories = TransactionAnalyzer.groupExpensesByCategory(transactions);
+        TransactionReportGenerator.printExpensesByCategoryReport(categories);
     }
 }
